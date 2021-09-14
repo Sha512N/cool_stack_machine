@@ -62,10 +62,23 @@ class Main inherits IO {
 
     s: Stack;
 
+    prompt() : String {
+    	{
+    	   out_string(">");
+    	   in_string();
+    	}
+    };
+
+    newline(): Object {
+        out_string("\n\r")
+    };
+
     main(): Object {
         {
             s <- new Stack;
-            s <- (new StackElement).create("Hello world", s);
+            s <- (new StackElement).create("It works!", s);
+            out_string(s.head());
+            newline();
         }
     };
 };
