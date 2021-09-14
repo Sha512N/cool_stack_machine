@@ -32,32 +32,32 @@ class StackElement inherits Stack {
 	        self;
 	    }
 	}
-}
+};
 
 class Command inherits IO {
     -- not impl
-}
+};
 
 class CommandInt inherits Command {
     -- not impl
-}
+};
 
 class CommandPlus inherits Command {
     -- not impl
-}
+};
 
 class CommandSwitch inherits Command {
 -- not impl
-}
+};
 
 class CommandEval inherits Command {
     -- not impl
-}
+};
 
 class CommandDisplay inherits Command {
     -- not impl
-}
+};
 
 class Main inherits IO {
     -- not impl
-}
+};
