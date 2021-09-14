@@ -70,7 +70,7 @@ class Main inherits IO {
     };
 
     newline(): Object {
-        out_string("\n\r")
+        out_string("\n")
     };
 
     main(): Object {
