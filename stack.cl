@@ -47,7 +47,7 @@ class CommandPlus inherits Command {
 };
 
 class CommandSwitch inherits Command {
--- not impl
+    -- not impl
 };
 
 class CommandEval inherits Command {
