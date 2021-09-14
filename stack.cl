@@ -31,7 +31,7 @@ class StackElement inherits Stack {
 	        rest <- list;
 	        self;
 	    }
-	}
+	};
 };
 
 class Command inherits IO {
