@@ -59,8 +59,13 @@ class CommandDisplay inherits Command {
 };
 
 class Main inherits IO {
+
+    s: Stack;
+
     main(): Object {
-        "Hello"
-        -- not impl
+        {
+            s <- new Stack;
+            s <- (new StackElement).create("Hello world", s);
+        }
     };
 };
