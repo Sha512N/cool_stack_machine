@@ -1,12 +1,12 @@
 class Stack {
 
-	isNull() : Bool { true };
+    isNull() : Bool { true };
 
-	head() : String { { abort(); "abort"; } };
+    head() : String { { abort(); "abort"; } };
 
-	rest() : Stack { { abort(); self; } };
+    rest() : Stack { { abort(); self; } };
 
-	stack(string: String) : Stack {
+    stack(string: String) : Stack {
         (new StackElement).create(string, self)
 	};
 
@@ -19,13 +19,13 @@ class StackElement inherits Stack {
 
     rest: Stack;
 
-	isNull() : Bool { false };
+    isNull() : Bool { false };
 
-	head() : String { head };
+    head() : String { head };
 
-	rest() : Stack { rest };
+    rest() : Stack { rest };
 
-	create(value: String, list: Stack) : Stack {
+    create(value: String, list: Stack) : Stack {
 	    {
 	        head <- value;
 	        rest <- list;
