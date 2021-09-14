@@ -59,5 +59,8 @@ class CommandDisplay inherits Command {
 };
 
 class Main inherits IO {
-    -- not impl
+    main(): Object {
+        "Hello"
+        -- not impl
+    };
 };
