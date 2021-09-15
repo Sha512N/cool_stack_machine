@@ -36,6 +36,15 @@ class StackElement inherits Stack {
 
 class Command inherits IO {
 
+    a2i : A2I;
+
+    set_a2i(input: A2I) : Command {
+        {
+            a2i <- input;
+            self;
+        }
+    };
+
     newline(): Object {
         out_string("\n")
     };
@@ -53,7 +62,10 @@ class Command inherits IO {
         if value = "e" then
             (new CommandExit).exec(stack)
         else
-            (new StackElement).add(value, stack)
+        {
+            a2i.a2i(value);
+            (new StackElement).add(value, stack);
+        }
         fi fi fi fi
     };
 
@@ -63,16 +75,6 @@ class Command inherits IO {
 };
 
 class CommandPlus inherits Command {
-
-    a2i : A2I;
-
-    set_a2i(input: A2I) : Command {
-        {
-            a2i <- input;
-            self;
-        }
-    };
-
     -- not impl
 };
 
@@ -122,7 +124,7 @@ class Main inherits IO {
 
     main(): Object {
         (
-            let mainCommand : Command <- new Command, s : Stack <- new Stack in
+            let mainCommand : Command <- (new Command).set_a2i(new A2I), s : Stack <- new Stack in
                 while true loop
                     (
                         let data : String <- prompt() in
