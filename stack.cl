@@ -36,45 +36,25 @@ class StackElement inherits Stack {
 
 class Command inherits IO {
 
-    a2i : A2I;
-
-    set_a2i(input: A2I) : Command {
-        {
-            a2i <- input;
-            self;
-        }
-    };
-
-    newline(): Object {
-        out_string("\n")
-    };
-
-    init(value: String, stack: Stack) : Stack {
-        if value = "+" then
-            (new StackElement).add(value, stack)
-        else
-        if value = "s" then
-            (new StackElement).add(value, stack)
-        else
-        if value = "d" then
-            (new CommandDisplay).exec(stack)
-        else
-        if value = "e" then
-            (new CommandExit).exec(stack)
-        else
-        {
-            a2i.a2i(value);
-            (new StackElement).add(value, stack);
-        }
-        fi fi fi fi
-    };
-
     exec(stack: Stack) : Stack {
         { abort(); new Stack; }
     };
+
 };
 
-class CommandPlus inherits Command {
+class CommandAddPlus inherits Command {
+    exec(stack: Stack) : Stack {
+        (new StackElement).add("+", stack)
+    };
+};
+
+class CommandAddSwitch inherits Command {
+    exec(stack: Stack) : Stack {
+        (new StackElement).add("s", stack)
+    };
+};
+
+class CommandSum inherits Command {
     -- not impl
 };
 
@@ -96,6 +76,11 @@ class CommandExit inherits Command {
 };
 
 class CommandDisplay inherits Command {
+
+    newline(): Object {
+        out_string("\n")
+    };
+
     exec(stack: Stack) : Stack {
         {
             if stack.isNull() then out_string("")
@@ -108,6 +93,46 @@ class CommandDisplay inherits Command {
             fi;
             stack;
         }
+    };
+};
+
+class CommandExec {
+
+    a2i : A2I;
+    display : Command;
+    exit : Command;
+    addPlus: Command;
+    addSwitch: Command;
+
+    set_env() : CommandExec {
+        {
+            a2i <- new A2I;
+            display <- new CommandDisplay;
+            exit <- new CommandExit;
+            addPlus <- new CommandAddPlus;
+            addSwitch <- new CommandAddSwitch;
+            self;
+        }
+    };
+
+    execute(value: String, stack: Stack) : Stack {
+        if value = "+" then
+            addPlus.exec(stack)
+        else
+        if value = "s" then
+            addSwitch.exec(stack)
+        else
+        if value = "d" then
+            display.exec(stack)
+        else
+        if value = "e" then
+            exit.exec(stack)
+        else
+        {
+            a2i.a2i(value);
+            (new StackElement).add(value, stack);
+        }
+        fi fi fi fi
     };
 };
 
@@ -124,11 +149,11 @@ class Main inherits IO {
 
     main(): Object {
         (
-            let mainCommand : Command <- (new Command).set_a2i(new A2I), s : Stack <- new Stack in
+            let mainCommand : CommandExec <- (new CommandExec).set_env(), s : Stack <- new Stack in
                 while true loop
                     (
                         let data : String <- prompt() in
-                            s <- mainCommand.init(data, s)
+                            s <- mainCommand.execute(data, s)
                     )
                 pool
         )
