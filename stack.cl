@@ -138,8 +138,6 @@ class CommandExec {
 
 class Main inherits IO {
 
-    s: Stack;
-
     prompt() : String {
     	{
     	   out_string(">");
