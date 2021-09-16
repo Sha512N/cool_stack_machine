@@ -55,15 +55,63 @@ class CommandAddSwitch inherits Command {
 };
 
 class CommandSum inherits Command {
-    -- not impl
+    a2i: A2I;
+
+    set_env(a2i_input: A2I) : Command {
+        {
+            a2i <- a2i_input;
+            self;
+        }
+    };
+
+    exec(stack: Stack) : Stack {
+        (
+            let operand1: Int <- a2i.a2i(stack.head()),
+                operand2: Int <- a2i.a2i(stack.rest().head()),
+                stack_new: Stack <- stack.rest().rest() in
+                {
+                    (new StackElement).add(a2i.i2a(operand1 + operand2), stack_new);
+                }
+        )
+    };
 };
 
 class CommandSwitch inherits Command {
-    -- not impl
+    exec(stack: Stack) : Stack {
+        (
+            let operand1: String <- stack.head(),
+                operand2: String <- stack.rest().head(),
+                stack_new: Stack <- stack.rest().rest() in
+                {
+                    (new StackElement).add(operand2, (new StackElement).add(operand1, stack_new));
+                }
+        )
+    };
 };
 
 class CommandEval inherits Command {
-    -- not impl
+
+    sum: Command;
+    switch: Command;
+
+    set_env(a2i_input: A2I) : Command {
+        {
+            sum <- (new CommandSum).set_env(a2i_input);
+            switch <- new CommandSwitch;
+            self;
+        }
+    };
+
+    exec(stack: Stack) : Stack {
+        if stack.head() = "s" then
+            switch.exec(stack.rest())
+        else
+        if stack.head() = "+" then
+            sum.exec(stack.rest())
+        else
+            stack
+        fi fi
+    };
 };
 
 class CommandExit inherits Command {
@@ -103,6 +151,7 @@ class CommandExec {
     exit : Command;
     addPlus: Command;
     addSwitch: Command;
+    eval: Command;
 
     set_env() : CommandExec {
         {
@@ -111,6 +160,7 @@ class CommandExec {
             exit <- new CommandExit;
             addPlus <- new CommandAddPlus;
             addSwitch <- new CommandAddSwitch;
+            eval <- (new CommandEval).set_env(a2i);
             self;
         }
     };
@@ -125,14 +175,17 @@ class CommandExec {
         if value = "d" then
             display.exec(stack)
         else
-        if value = "e" then
+        if value = "x" then
             exit.exec(stack)
+        else
+        if value = "e" then
+            eval.exec(stack)
         else
         {
             a2i.a2i(value);
             (new StackElement).add(value, stack);
         }
-        fi fi fi fi
+        fi fi fi fi fi
     };
 };
 
