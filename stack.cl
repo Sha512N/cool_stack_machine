@@ -103,6 +103,9 @@ class CommandEval inherits Command {
     };
 
     exec(stack: Stack) : Stack {
+        if stack.isNull() then
+            stack
+        else
         if stack.head() = "s" then
             switch.exec(stack.rest())
         else
@@ -110,7 +113,7 @@ class CommandEval inherits Command {
             sum.exec(stack.rest())
         else
             stack
-        fi fi
+        fi fi fi
     };
 };
 
