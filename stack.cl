@@ -117,15 +117,6 @@ class CommandEval inherits Command {
     };
 };
 
-class CommandExit inherits Command {
-    exec(stack: Stack) : Stack {
-        {
-            abort();
-            stack;
-        }
-    };
-};
-
 class CommandDisplay inherits Command {
 
     newline(): Object {
@@ -151,7 +142,6 @@ class CommandExec {
 
     a2i : A2I;
     display : Command;
-    exit : Command;
     addPlus: Command;
     addSwitch: Command;
     eval: Command;
@@ -160,7 +150,6 @@ class CommandExec {
         {
             a2i <- new A2I;
             display <- new CommandDisplay;
-            exit <- new CommandExit;
             addPlus <- new CommandAddPlus;
             addSwitch <- new CommandAddSwitch;
             eval <- (new CommandEval).set_env(a2i);
@@ -178,9 +167,6 @@ class CommandExec {
         if value = "d" then
             display.exec(stack)
         else
-        if value = "x" then
-            exit.exec(stack)
-        else
         if value = "e" then
             eval.exec(stack)
         else
@@ -188,11 +174,15 @@ class CommandExec {
             a2i.a2i(value);
             (new StackElement).add(value, stack);
         }
-        fi fi fi fi fi
+        fi fi fi fi
     };
 };
 
 class Main inherits IO {
+
+    mainCommand : CommandExec;
+    s : Stack;
+    data : String;
 
     prompt() : String {
     	{
@@ -203,13 +193,17 @@ class Main inherits IO {
 
     main(): Object {
         (
-            let mainCommand : CommandExec <- (new CommandExec).set_env(), s : Stack <- new Stack in
-                while true loop
-                    (
-                        let data : String <- prompt() in
-                            s <- mainCommand.execute(data, s)
-                    )
-                pool
+            {
+                mainCommand <- (new CommandExec).set_env();
+                s <- new Stack;
+                data <- prompt();
+                while (not data = "x") loop
+                    {
+                        s <- mainCommand.execute(data, s);
+                        data <- prompt();
+                    }
+                pool;
+            }
         )
     };
 };
